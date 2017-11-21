@@ -16,8 +16,11 @@ export interface IEvergageABTestProps {
     timeout: number;
     defaultExperience: number;
 }
+export interface IEvergageABTestState {
+    selectedExperience: number 
+}
 
-export default class EvergageABTest extends React.Component<IEvergageABTestProps, any> {
+export default class EvergageABTest extends React.Component<IEvergageABTestProps, IEvergageABTestState> {
     public static defaultProps: Partial<IEvergageABTestProps> = {        
         eventPrefix: "EvergageAB",
         timeout: 100,
