@@ -7,7 +7,7 @@ Integrate Evergage AB testing experiences into your react code.
 
  - Listens for events dispatched by evergage experiences (must be added manually, format below)
  - Can mount muliple experiences per evergage campaign, experience will be decided by evergage and will be mounted after an event is fired in your evergage experience.
- - Will fall back to control group with option for manual override. Will wait for experience to be triggered by evergage before revering to control group if the campaign is not active.
+ - Will fall back to control group with option for manual override. Will wait for experience to be triggered by evergage before reverting to control group if the campaign is not active.
  - Will not mount a component until evergage gives an experience or the (customizeable) timeout expires after the window dom content loaded event to uphold anti-flicker-ness. 
  - Server Side Rendering friendly (will not mount on server side due to nature of campaigns)
 
