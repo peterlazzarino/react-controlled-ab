@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import indexOf from "array-index-of";
+import * as indexOf from "array-index-of";
 
-const canUseDOM = typeof window == 'undefined';
+const canUseDOM = typeof window != 'undefined';
 
 export interface Variant {
     name: string;
@@ -61,11 +61,11 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
     }
     public render(){
         if(!canUseDOM){
-            return null!;
+            return null;
         }
         const { variants, campaign } = this.props;
         if(this.state.selectedExperience == null){
-            return null!;
+            return null;
         }
         const experience = variants[this.state.selectedExperience];
         const experienceNode = experience.node;

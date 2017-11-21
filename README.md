@@ -76,14 +76,6 @@ Type: string  Default: undefined
 
 The name of the campaign you are testing, should correspond to the campaign in evergage but is really just a way to group experiences.
 
-### offset
-
-Type: Number/Array(Number) Default: 0
-
-Say if you want to preload a component even if it's 100px below the viewport (user have to scroll 100px more to see this component), you can set `offset` props to `100`. On the other hand, if you want to delay loading a component even if it's top edge has already appeared at viewport, set `offset` to negative number.
-
-If you provide this props with array like `[200, 200]`, it will set top edge offset and bottom edge offset respectively.
-
 ### eventPrefix
 
 Type: string Default: EvergageAB

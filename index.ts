@@ -1,5 +1,3 @@
 import EvergageAB from "./components/EvergageABTest";
 
-export {
-    EvergageAB
-};
+export default EvergageAB;
