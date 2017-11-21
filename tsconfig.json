@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "jsx": "react",
+        "target": "es5",
+        "declaration": true,
+        "types": []
+    },
+    "exclude": [
+        "**/*.spec.*",
+        "node_modules"
+    ]
+}

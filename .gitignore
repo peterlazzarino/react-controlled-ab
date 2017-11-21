@@ -1,0 +1,14 @@
+node_modules/
+/**/*.js
+/**/*.d.ts
+/**/__snapshots__/
+**/*.tgz
+coverage/
+styleguide/*
+.DS_Store
+
+# Add styleguide configuration file
+!styleguide.config.js
+
+# Hide logs
+**/*.log
