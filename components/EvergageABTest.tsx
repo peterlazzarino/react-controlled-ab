@@ -20,7 +20,7 @@ export interface IEvergageABTestProps {
 
 export interface IEvergageABTestState {
     selectedExperience: number;
-    experienceReceived: boolean;
+    campaignEventReceived: boolean;
 }
 
 export default class EvergageABTest extends React.Component<IEvergageABTestProps, IEvergageABTestState> {
@@ -33,7 +33,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         super(props);
         this.state = {
             selectedExperience: null,
-            experienceReceived: false
+            campaignEventReceived: false
         }
         this.handleEvent = this.handleEvent.bind(this);
         this.checkForExperience = this.checkForExperience.bind(this);
@@ -49,7 +49,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         });
     }
     checkForExperience(){
-        if(!this.state.experienceReceived && !this.props.supressFallback){            
+        if(!this.state.campaignEventReceived && !this.props.supressFallback){            
             this.setState({
                 selectedExperience: this.props.defaultExperience
             })
@@ -57,16 +57,17 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
     }
     handleEvent(listener){
         const {detail : experience} = listener;
+        const notFoundIndex = -1;
         const chosenExperience = indexOf(this.props.variants, experience.variant, function(inArr, variant) {
             return inArr.name === variant;
         }); 
-        if(chosenExperience != -1){
+        if(chosenExperience != notFoundIndex){
             this.setState({
                 selectedExperience: chosenExperience
             })
         }
         this.setState({
-            experienceReceived: true
+            campaignEventReceived: true
         })
     }
     public render(){
