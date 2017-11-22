@@ -14,8 +14,10 @@ export interface IEvergageABTestProps {
     campaign: string;
     eventPrefix: string;
     timeout: number;
+    supressFallback: boolean;
     defaultExperience: number;
 }
+
 export interface IEvergageABTestState {
     selectedExperience: number 
 }
@@ -45,7 +47,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         };
     }
     checkForExperience(){
-        if(this.state.selectedExperience == null){            
+        if(this.state.selectedExperience == null && !this.props.supressFallback){            
             this.setState({
                 selectedExperience: this.props.defaultExperience
             })
