@@ -1,6 +1,6 @@
 {
   "name": "react-evergage-ab",
-  "version": "1.0.72-pre",
+  "version": "1.0.8",
   "description": "React component for integrating Evergage test experiences with your react code.",
   "main": "./index.js",
   "types": "./index.d.ts",
