@@ -23,12 +23,10 @@ Set up your campaign in evergage, for each experience (except for control) paste
 
 Where campaign is the name of your campaign and variant is a descriptor for the experience you are editing.
 
-```javascript    
-
-    var event = document.createEvent("CustomEvent");
-    event.initCustomEvent("EvergageAB-campaign", false, true, { variant: "variant"});
-    window.dispatchEvent(event);
-
+```javascript  
+var event = document.createEvent("CustomEvent");
+event.initCustomEvent("EvergageAB-campaign", false, true, { variant: "variant"});
+window.dispatchEvent(event);
 ```
 The EvergageAB can be overriden in the component props. 
 
@@ -58,7 +56,6 @@ class Header extends Component {
         )
     };
 }
-
 ```
 
 
