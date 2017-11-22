@@ -14,10 +14,13 @@ export interface IEvergageABTestProps {
     campaign: string;
     eventPrefix: string;
     timeout: number;
+    supressFallback: boolean;
     defaultExperience: number;
 }
+
 export interface IEvergageABTestState {
-    selectedExperience: number 
+    selectedExperience: number;
+    campaignEventReceived: boolean;
 }
 
 export default class EvergageABTest extends React.Component<IEvergageABTestProps, IEvergageABTestState> {
@@ -29,7 +32,8 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
     constructor(props){
         super(props);
         this.state = {
-            selectedExperience: null
+            selectedExperience: null,
+            campaignEventReceived: false
         }
         this.handleEvent = this.handleEvent.bind(this);
         this.checkForExperience = this.checkForExperience.bind(this);
@@ -40,12 +44,12 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         }
         const { checkForExperience, handleEvent, props : { campaign,  eventPrefix, timeout } } = this;
         window.addEventListener(`${eventPrefix}-${campaign}`, handleEvent);
-        window.onload = function() {
+        window.addEventListener('load', function() {
             window.setTimeout(checkForExperience, timeout);
-        };
+        });
     }
     checkForExperience(){
-        if(this.state.selectedExperience == null){            
+        if(!this.state.campaignEventReceived && !this.props.supressFallback){            
             this.setState({
                 selectedExperience: this.props.defaultExperience
             })
@@ -53,14 +57,18 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
     }
     handleEvent(listener){
         const {detail : experience} = listener;
+        const notFoundIndex = -1;
         const chosenExperience = indexOf(this.props.variants, experience.variant, function(inArr, variant) {
             return inArr.name === variant;
         }); 
-        if(chosenExperience != null){
+        if(chosenExperience != notFoundIndex){
             this.setState({
                 selectedExperience: chosenExperience
             })
         }
+        this.setState({
+            campaignEventReceived: true
+        })
     }
     public render(){
         if(!canUseDOM){
