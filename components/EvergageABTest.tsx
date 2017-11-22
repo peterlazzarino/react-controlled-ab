@@ -19,7 +19,8 @@ export interface IEvergageABTestProps {
 }
 
 export interface IEvergageABTestState {
-    selectedExperience: number 
+    selectedExperience: number;
+    experienceReceived: boolean;
 }
 
 export default class EvergageABTest extends React.Component<IEvergageABTestProps, IEvergageABTestState> {
@@ -31,7 +32,8 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
     constructor(props){
         super(props);
         this.state = {
-            selectedExperience: null
+            selectedExperience: null,
+            experienceReceived: false
         }
         this.handleEvent = this.handleEvent.bind(this);
         this.checkForExperience = this.checkForExperience.bind(this);
@@ -42,12 +44,12 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         }
         const { checkForExperience, handleEvent, props : { campaign,  eventPrefix, timeout } } = this;
         window.addEventListener(`${eventPrefix}-${campaign}`, handleEvent);
-        window.onload = function() {
+        window.addEventListener('load', function() {
             window.setTimeout(checkForExperience, timeout);
-        };
+        });
     }
     checkForExperience(){
-        if(this.state.selectedExperience == null && !this.props.supressFallback){            
+        if(!this.state.experienceReceived && !this.props.supressFallback){            
             this.setState({
                 selectedExperience: this.props.defaultExperience
             })
@@ -58,11 +60,14 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         const chosenExperience = indexOf(this.props.variants, experience.variant, function(inArr, variant) {
             return inArr.name === variant;
         }); 
-        if(chosenExperience != null){
+        if(chosenExperience != -1){
             this.setState({
                 selectedExperience: chosenExperience
             })
         }
+        this.setState({
+            experienceReceived: true
+        })
     }
     public render(){
         if(!canUseDOM){
