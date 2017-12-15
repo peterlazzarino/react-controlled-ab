@@ -91,7 +91,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             const placeholderStyle = {
                 visibility: "hidden",
             };
-            return <div style={placeholderStyle}>{fallBackVariant}</div>;
+            return <div style={placeholderStyle}>{fallBackVariant.node}</div>;
         }
         return (
             experienceNode
