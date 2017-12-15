@@ -87,12 +87,11 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         if(canUseDOM && selectedExperience != null) {
             const experience = variants[selectedExperience];
             experienceNode = experience.node;
-        }
-        else if(!supressFallback && placeholder){
-            var placeholderStyle = {
-                visibility: "hidden"
+        } else if (!supressFallback && placeholder) {
+            const placeholderStyle = {
+                visibility: "hidden",
             };
-            return <div style={placeholderStyle}>{fallBackVariant}</div>
+            return <div style={placeholderStyle}>{fallBackVariant}</div>;
         }
         return (
             experienceNode
