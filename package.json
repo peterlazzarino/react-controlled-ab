@@ -1,6 +1,6 @@
 {
   "name": "react-evergage-ab",
-  "version": "1.1.1",
+  "version": "1.2.3",
   "description": "React component for integrating Evergage test experiences with your react code.",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -21,7 +21,7 @@
     "campaign"
   ],
   "author": "Go Ahead Tours",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/GoAheadTours/react-evergage-AB/issues"
   },
