@@ -14,6 +14,7 @@ export interface IEvergageABTestProps {
     campaign: string;
     eventPrefix: string;
     timeout: number;
+    placeholder: boolean;
     supressFallback: boolean;
     defaultExperience: number;
 }
@@ -79,15 +80,19 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         });
     }
     public render () {
-        if(!canUseDOM) {
-            return <div />;
+        let experienceNode = null;
+        const { variants, supressFallback, placeholder } = this.props;
+        const { selectedExperience } = this.state;
+        const fallBackVariant = supressFallback ? null : variants[0];
+        if(canUseDOM && selectedExperience != null) {
+            const experience = variants[selectedExperience];
+            experienceNode = experience.node;
+        } else if (!supressFallback && placeholder) {
+            const placeholderStyle = {
+                visibility: "hidden",
+            };
+            return <div style={placeholderStyle}>{fallBackVariant.node}</div>;
         }
-        const { variants, campaign } = this.props;
-        if(this.state.selectedExperience == null) {
-            return <div />;
-        }
-        const experience = variants[this.state.selectedExperience];
-        const experienceNode = experience.node;
         return (
             experienceNode
         );
