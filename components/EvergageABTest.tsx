@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as indexOf from "array-index-of";
+import { subscribeToCampaign } from "evergage-datalayer"
 
 const canUseDOM = typeof window !== "undefined";
 
@@ -20,7 +21,7 @@ export interface IEvergageABTestProps {
 }
 
 export interface IEvergageABTestState {
-    selectedExperience: number;
+    selectedExperience: IVariant;
     campaignEventReceived: boolean;
 }
 
@@ -37,46 +38,20 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             campaignEventReceived: false,
         };
         this.handleEvent = this.handleEvent.bind(this);
-        this.checkForExperience = this.checkForExperience.bind(this);
     }
     public componentDidMount () {
         if(!canUseDOM) {
             return;
         }
-        const { checkForExperience, handleEvent, props : { campaign,  eventPrefix, timeout } } = this;
-        window.addEventListener(`${eventPrefix}-${campaign}`, handleEvent);
-        if(document.readyState === "complete") {
-            window.setTimeout(checkForExperience, timeout);
-            return;
-        }
-        window.addEventListener("load", () => {
-            window.setTimeout(checkForExperience, timeout);
-        });
+        const { campaign,  eventPrefix, timeout } = this.props;
+        subscribeToCampaign(this.handleEvent, campaign);
     }
-    public componentWillUnmount () {
-        const { checkForExperience, handleEvent, props : { campaign,  eventPrefix, timeout } } = this;
-        window.removeEventListener(`${eventPrefix}-${campaign}`, handleEvent);
-    }
-    public checkForExperience () {
-        if(!this.state.campaignEventReceived && !this.props.supressFallback) {
-            this.setState({
-                selectedExperience: this.props.defaultExperience,
-            });
-        }
-    }
-    public handleEvent (listener) {
-        const {detail : experience} = listener;
-        const notFoundIndex = -1;
-        const chosenExperience = indexOf(this.props.variants, experience.variant, (inArr, variant) => {
-            return inArr.name === variant;
-        });
-        if(chosenExperience !== notFoundIndex) {
-            this.setState({
-                selectedExperience: chosenExperience,
-            });
-        }
+    public handleEvent (campaign) {
+        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0]);
+        const currentExperience = this.props.variants[currentExperienceIndex];
         this.setState({
-            campaignEventReceived: true,
+            selectedExperience: currentExperience,
+            campaignEventReceived: true
         });
     }
     public render () {
@@ -85,8 +60,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         const { selectedExperience } = this.state;
         const fallBackVariant = supressFallback ? null : variants[0];
         if(canUseDOM && selectedExperience != null) {
-            const experience = variants[selectedExperience];
-            experienceNode = experience.node;
+            experienceNode = selectedExperience.node;
         } else if (!supressFallback && placeholder) {
             const placeholderStyle = {
                 visibility: "hidden",
