@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as indexOf from "array-index-of";
-import { subscribeToCampaign } from "evergage-datalayer"
+import { subscribeToCampaign } from "evergage-datalayer";
 
 const canUseDOM = typeof window !== "undefined";
 
@@ -45,13 +45,27 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         }
         const { campaign,  eventPrefix, timeout } = this.props;
         subscribeToCampaign(this.handleEvent, campaign);
+        if(document.readyState === "complete") {
+            window.setTimeout(this.checkForExperience, timeout);
+            return;
+        }
+        window.addEventListener("load", () => {
+            window.setTimeout(this.checkForExperience, timeout);
+        });
+    }
+    public checkForExperience () {
+        if(!this.state.campaignEventReceived && !this.props.supressFallback) {
+            this.setState({
+                selectedExperience: this.props.variants[this.props.defaultExperience],
+            });
+        }
     }
     public handleEvent (campaign) {
-        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0]);
+        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10);
         const currentExperience = this.props.variants[currentExperienceIndex];
         this.setState({
             selectedExperience: currentExperience,
-            campaignEventReceived: true
+            campaignEventReceived: true,
         });
     }
     public render () {
