@@ -38,6 +38,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             campaignEventReceived: false,
         };
         this.handleEvent = this.handleEvent.bind(this);
+        this.checkForExperience = this.checkForExperience.bind(this);
     }
     public componentDidMount () {
         if(!canUseDOM) {
