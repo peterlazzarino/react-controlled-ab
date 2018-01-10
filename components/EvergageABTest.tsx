@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as indexOf from "array-index-of";
+import { subscribeToCampaign } from "evergage-datalayer";
 
 const canUseDOM = typeof window !== "undefined";
 
 export interface IVariant {
-    name: string;
     node: JSX.Element;
 }
 
@@ -20,7 +20,7 @@ export interface IEvergageABTestProps {
 }
 
 export interface IEvergageABTestState {
-    selectedExperience: number;
+    selectedExperience: JSX.Element;
     campaignEventReceived: boolean;
 }
 
@@ -43,55 +43,44 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         if(!canUseDOM) {
             return;
         }
-        const { checkForExperience, handleEvent, props : { campaign,  eventPrefix, timeout } } = this;
-        window.addEventListener(`${eventPrefix}-${campaign}`, handleEvent);
+        const { campaign,  eventPrefix, timeout } = this.props;
+        subscribeToCampaign(this.handleEvent, campaign);
         if(document.readyState === "complete") {
-            window.setTimeout(checkForExperience, timeout);
+            window.setTimeout(this.checkForExperience, timeout);
             return;
         }
         window.addEventListener("load", () => {
-            window.setTimeout(checkForExperience, timeout);
+            window.setTimeout(this.checkForExperience, timeout);
         });
-    }
-    public componentWillUnmount () {
-        const { checkForExperience, handleEvent, props : { campaign,  eventPrefix, timeout } } = this;
-        window.removeEventListener(`${eventPrefix}-${campaign}`, handleEvent);
     }
     public checkForExperience () {
+        const { children } = this.props;
         if(!this.state.campaignEventReceived && !this.props.supressFallback) {
             this.setState({
-                selectedExperience: this.props.defaultExperience,
+                selectedExperience: React.Children.only(children),
             });
         }
     }
-    public handleEvent (listener) {
-        const {detail : experience} = listener;
-        const notFoundIndex = -1;
-        const chosenExperience = indexOf(this.props.variants, experience.variant, (inArr, variant) => {
-            return inArr.name === variant;
-        });
-        if(chosenExperience !== notFoundIndex) {
-            this.setState({
-                selectedExperience: chosenExperience,
-            });
-        }
+    public handleEvent (campaign) {
+        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10) - 1;
+        const currentExperience = this.props.variants[currentExperienceIndex];
         this.setState({
+            selectedExperience: currentExperience.node,
             campaignEventReceived: true,
         });
     }
     public render () {
         let experienceNode = null;
-        const { variants, supressFallback, placeholder } = this.props;
+        const { supressFallback, placeholder, children } = this.props;
         const { selectedExperience } = this.state;
-        const fallBackVariant = supressFallback ? null : variants[0];
+        const fallBackVariant = supressFallback ? null : React.Children.only(children);
         if(canUseDOM && selectedExperience != null) {
-            const experience = variants[selectedExperience];
-            experienceNode = experience.node;
+            experienceNode = selectedExperience;
         } else if (!supressFallback && placeholder) {
             const placeholderStyle = {
                 visibility: "hidden",
             };
-            return <div style={placeholderStyle}>{fallBackVariant.node}</div>;
+            return <div style={placeholderStyle}>{fallBackVariant}</div>;
         }
         return (
             experienceNode
