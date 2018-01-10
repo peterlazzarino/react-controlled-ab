@@ -19,18 +19,9 @@ $ npm install --save react-evergage-ab
 
 ## Usage
 
-Set up your campaign in evergage, for each experience (except for control) paste the following into the experience javascript for an invisible message.
+Set up your campaign in evergage, with as many experiences as you would like test variants.
 
-Where campaign is the name of your campaign and variant is a descriptor for the experience you are editing.
-
-```javascript  
-var event = document.createEvent("CustomEvent");
-event.initCustomEvent("EvergageAB-campaign", false, true, { variant: "variant"});
-window.dispatchEvent(event);
-```
-The EvergageAB can be overriden in the component props. 
-
-Then in your application use the EvergageAB component for your campaign, giving it an array of variants each with its experience descriptor and a component to render.
+Then in your application use the EvergageAB component for your campaign, giving it an array of components to render for each experience.
 
 ```javascript
 import React from 'react';
@@ -40,18 +31,14 @@ class Header extends Component {
     render() {
         return (
             <div>
-                <EvergageAB campaign="logoTest" variants={[
-                    {
-                        name: "headingTest",
-                        node: <h1>Test header</h1>
-                    }, {
-                        name: "spanHeading",
+                <EvergageAB campaign="logoTest" variants={[{
                         node: <span>Test header in span</span>
                     }, {
-                        name: "boldHeading",
                         node: <span><b>Bold header in span</b></span>
                     }
-                ]} />
+                ]}>
+                    <h1>Test header</h1>
+                </EvergageAB>
             </div>
         )
     };
@@ -63,9 +50,9 @@ class Header extends Component {
 
 ### variants
 
-Type: Array({Name: string, Node: JSX.Element}) Default: undefined
+Type: Array({ Node: JSX.Element }) Default: undefined
 
-Your name / node pairs of experience descriptors and the node that will mount if that experience is chosen.
+Your react components that should be shown for a given experience, first element is Experience 1, second is Experience 2 and so on.
 
 ### campaign
 
@@ -85,8 +72,8 @@ Type: number Default: 100
 
 The amount of miliseconds to wait after dom content loaded to fallback to the control group if no event is received
 
-### defaultExperience
+### placeholder
 
-Type: number Default: 0
+Type: boolean Default: false
 
-The index of the variants array to show after timeout after dom loaded to fallback to, uses 0 by default.
+Mount the control with visibility: hidden set on a container so the place it would usually take up is taken up in the DOM, can help to avoid jarring transitions

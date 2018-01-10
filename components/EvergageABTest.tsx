@@ -6,7 +6,6 @@ import { subscribeToCampaign } from "evergage-datalayer";
 const canUseDOM = typeof window !== "undefined";
 
 export interface IVariant {
-    name: string;
     node: JSX.Element;
 }
 
@@ -21,7 +20,7 @@ export interface IEvergageABTestProps {
 }
 
 export interface IEvergageABTestState {
-    selectedExperience: IVariant;
+    selectedExperience: JSX.Element;
     campaignEventReceived: boolean;
 }
 
@@ -55,32 +54,33 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         });
     }
     public checkForExperience () {
+        const { children } = this.props;
         if(!this.state.campaignEventReceived && !this.props.supressFallback) {
             this.setState({
-                selectedExperience: this.props.variants[this.props.defaultExperience],
+                selectedExperience: React.Children.only(children),
             });
         }
     }
     public handleEvent (campaign) {
-        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10);
+        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10) - 1;
         const currentExperience = this.props.variants[currentExperienceIndex];
         this.setState({
-            selectedExperience: currentExperience,
+            selectedExperience: currentExperience.node,
             campaignEventReceived: true,
         });
     }
     public render () {
         let experienceNode = null;
-        const { variants, supressFallback, placeholder } = this.props;
+        const { supressFallback, placeholder, children } = this.props;
         const { selectedExperience } = this.state;
-        const fallBackVariant = supressFallback ? null : variants[0];
+        const fallBackVariant = supressFallback ? null : React.Children.only(children);
         if(canUseDOM && selectedExperience != null) {
-            experienceNode = selectedExperience.node;
+            experienceNode = selectedExperience;
         } else if (!supressFallback && placeholder) {
             const placeholderStyle = {
                 visibility: "hidden",
             };
-            return <div style={placeholderStyle}>{fallBackVariant.node}</div>;
+            return <div style={placeholderStyle}>{fallBackVariant}</div>;
         }
         return (
             experienceNode
