@@ -21,7 +21,7 @@ $ npm install --save react-evergage-ab
 
 Set up your campaign in evergage, with as many experiences as you would like test variants.
 
-Then in your application use the EvergageAB component for your campaign, giving it an array of components to render for each experience.
+Then in your application use the EvergageAB component for your campaign, giving it children to render for each experience. The first child is the control and subsequent children should be experiences in order, First experience is second child and so on.
 
 ```javascript
 import React from 'react';
@@ -31,13 +31,10 @@ class Header extends Component {
     render() {
         return (
             <div>
-                <EvergageAB campaign="logoTest" variants={[{
-                        node: <span>Test header in span</span>
-                    }, {
-                        node: <span><b>Bold header in span</b></span>
-                    }
-                ]}>
+                <EvergageAB campaign="logoTest">
                     <h1>Test header</h1>
+                    <span>Test header in span</span>
+                    <span><b>Bold header in span</b></span>
                 </EvergageAB>
             </div>
         )
@@ -48,23 +45,11 @@ class Header extends Component {
 
 ## Props
 
-### variants
-
-Type: Array({ Node: JSX.Element }) Default: undefined
-
-Your react components that should be shown for a given experience, first element is Experience 1, second is Experience 2 and so on.
-
 ### campaign
 
 Type: string  Default: undefined
 
 The name of the campaign you are testing, should correspond to the campaign in evergage but is really just a way to group experiences.
-
-### eventPrefix
-
-Type: string Default: EvergageAB
-
-The prefix for events that the components listens to
 
 ### timeout
 
