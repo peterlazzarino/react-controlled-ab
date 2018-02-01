@@ -5,12 +5,7 @@ import { subscribeToCampaign } from "evergage-datalayer";
 
 const canUseDOM = typeof window !== "undefined";
 
-export interface IVariant {
-    node: JSX.Element;
-}
-
 export interface IEvergageABTestProps {
-    variants: IVariant[];
     campaign: string;
     eventPrefix: string;
     timeout: number;
@@ -20,7 +15,7 @@ export interface IEvergageABTestProps {
 }
 
 export interface IEvergageABTestState {
-    selectedExperience: JSX.Element;
+    selectedExperience: number;
     campaignEventReceived: boolean;
 }
 
@@ -33,7 +28,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
     constructor (props) {
         super(props);
         this.state = {
-            selectedExperience: null,
+            selectedExperience: undefined,
             campaignEventReceived: false,
         };
         this.handleEvent = this.handleEvent.bind(this);
@@ -57,33 +52,33 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         const { children } = this.props;
         if(!this.state.campaignEventReceived && !this.props.supressFallback) {
             this.setState({
-                selectedExperience: React.Children.only(children),
+                selectedExperience: 0,
             });
         }
     }
     public handleEvent (campaign) {
-        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10) - 1;
-        const currentExperience = this.props.variants[currentExperienceIndex];
+        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10);
         this.setState({
-            selectedExperience: currentExperience.node,
+            selectedExperience: currentExperienceIndex,
             campaignEventReceived: true,
         });
     }
     public render () {
-        let experienceNode = null;
         const { supressFallback, placeholder, children } = this.props;
         const { selectedExperience } = this.state;
-        const fallBackVariant = supressFallback ? null : React.Children.only(children);
-        if(canUseDOM && selectedExperience != null) {
-            experienceNode = selectedExperience;
-        } else if (!supressFallback && placeholder) {
+        if(!canUseDOM) {
+            return null;
+        }
+        if (!supressFallback && placeholder && selectedExperience === undefined) {
             const placeholderStyle = {
                 visibility: "hidden",
             };
-            return <div style={placeholderStyle}>{fallBackVariant}</div>;
+            return <div style={placeholderStyle}>{children[0]}</div>;
+        } else if (selectedExperience === undefined) {
+            return null;
         }
         return (
-            experienceNode
+            children[selectedExperience]
         );
     }
 }
