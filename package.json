@@ -1,6 +1,6 @@
 {
   "name": "react-evergage-ab",
-  "version": "2.0.0-alpha.10",
+  "version": "2.0.0",
   "description": "React component for integrating Evergage test experiences with your react code.",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/GoAheadTours/react-evergage-AB#readme",
   "dependencies": {
     "array-index-of": "^0.1.0",
-    "evergage-datalayer": "^1.0.7",
+    "evergage-datalayer": "^2.0.0",
     "prop-types": "15.6.0",
     "react": "16.0.0"
   },
