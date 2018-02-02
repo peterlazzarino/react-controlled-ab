@@ -34,13 +34,14 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             campaignEventReceived: false,
         };
         this.handleEvent = this.handleEvent.bind(this);
+        this.callbackExperience = this.callbackExperience.bind(this);
         this.checkForExperience = this.checkForExperience.bind(this);
     }
     public componentDidMount () {
         if(!canUseDOM) {
             return;
         }
-        const { campaign,  eventPrefix, timeout } = this.props;
+        const { campaign, eventPrefix, timeout } = this.props;
         subscribeToCampaign(this.handleEvent, campaign);
         if(document.readyState === "complete") {
             window.setTimeout(this.checkForExperience, timeout);
@@ -56,7 +57,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             this.setState({
                 selectedExperience: 0,
             });
-            this.props.onExperience(new Campaign(0));
+            this.callbackExperience(0);
         }
     }
     public handleEvent (campaign) {
@@ -65,7 +66,14 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             selectedExperience: currentExperienceIndex,
             campaignEventReceived: true,
         });
-        this.props.onExperience(new Campaign(currentExperienceIndex));
+        this.callbackExperience(currentExperienceIndex);
+    }
+    public callbackExperience (experienceId) {
+        const { campaign } = this.props;
+        const campaignObj = new Campaign(experienceId, campaign);
+        if(this.props.onExperience) {
+            this.props.onExperience(campaignObj);
+        }
     }
     public render () {
         const { supressFallback, placeholder, children } = this.props;
