@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as indexOf from "array-index-of";
+import { Campaign, ICampaign } from "../models/Campaign";
 import { subscribeToCampaign } from "evergage-datalayer";
 
 const canUseDOM = typeof window !== "undefined";
@@ -12,6 +13,7 @@ export interface IEvergageABTestProps {
     placeholder: boolean;
     supressFallback: boolean;
     defaultExperience: number;
+    onExperience: (ICampaign) => void;
 }
 
 export interface IEvergageABTestState {
@@ -54,6 +56,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             this.setState({
                 selectedExperience: 0,
             });
+            this.props.onExperience(new Campaign(0));
         }
     }
     public handleEvent (campaign) {
@@ -62,6 +65,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             selectedExperience: currentExperienceIndex,
             campaignEventReceived: true,
         });
+        this.props.onExperience(new Campaign(currentExperienceIndex));
     }
     public render () {
         const { supressFallback, placeholder, children } = this.props;
