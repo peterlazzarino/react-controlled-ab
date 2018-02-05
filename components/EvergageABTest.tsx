@@ -89,6 +89,10 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         } else if (selectedExperience === undefined) {
             return null;
         }
+        const hasChildForExperience = React.Children.toArray(children).length < selectedExperience;
+        if(!hasChildForExperience) {
+            return null;
+        }
         return (
             children[selectedExperience]
         );
