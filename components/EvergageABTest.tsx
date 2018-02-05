@@ -81,9 +81,6 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         if(!canUseDOM) {
             return null;
         }
-        if(children === null || children === undefined) {
-            return null;
-        }
         if (!supressFallback && placeholder && selectedExperience === undefined) {
             const placeholderStyle = {
                 visibility: "hidden",
@@ -91,8 +88,11 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             return <div style={placeholderStyle}>{children[0]}</div>;
         } else if (selectedExperience === undefined) {
             return null;
-        } 
-      
+        }
+        const hasChildForExperience = React.Children.toArray(children).length < selectedExperience;
+        if(!hasChildForExperience) {
+            return null;
+        }
         return (
             children[selectedExperience]
         );
