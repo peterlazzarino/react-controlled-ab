@@ -36,6 +36,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         this.handleEvent = this.handleEvent.bind(this);
         this.callbackExperience = this.callbackExperience.bind(this);
         this.checkForExperience = this.checkForExperience.bind(this);
+        this.renderExperience = this.renderExperience.bind(this);
     }
     public componentDidMount () {
         if(!canUseDOM) {
@@ -75,8 +76,22 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             this.props.onExperience(campaignObj);
         }
     }
+    public renderExperience (children, selectedExperience, campaign) {
+        try {
+            const experiencedReceived = children[selectedExperience];
+            return (
+                experiencedReceived
+            );
+        } catch(err) {
+            const errorMessage = `You do not have enough children to match the amount of experiences you have
+            configured in evergage... Campaign: ${campaign} Experience selected: ${selectedExperience}`;
+            // tslint:disable-next-line:no-console
+            console.warn(errorMessage);
+            return null;
+        }
+    }
     public render () {
-        const { supressFallback, placeholder, children } = this.props;
+        const { supressFallback, placeholder, children, campaign} = this.props;
         const { selectedExperience } = this.state;
         if(!canUseDOM) {
             return null;
@@ -89,12 +104,6 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         } else if (selectedExperience === undefined) {
             return null;
         }
-        const hasChildForExperience = React.Children.toArray(children).length < selectedExperience;
-        if(!hasChildForExperience) {
-            return null;
-        }
-        return (
-            children[selectedExperience]
-        );
+        return this.renderExperience(children, selectedExperience, campaign);
     }
 }
