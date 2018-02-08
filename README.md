@@ -8,7 +8,7 @@ Integrate Evergage AB testing experiences into your react code.
  - Listens for events dispatched by evergage experiences (must be added manually, format below)
  - Can mount muliple experiences per evergage campaign, experience will be decided by evergage and will be mounted after an event is fired in your evergage experience.
  - Will fall back to control group with option for manual override. Will wait for experience to be triggered by evergage before reverting to control group if the campaign is not active.
- - Will not mount a component until evergage gives an experience or the (customizeable) timeout expires after the window dom content loaded event to uphold anti-flicker-ness. 
+ - Will not mount a component until evergage gives an experience or the (customizeable) timeout expires after the window dom content loaded event to uphold anti-flicker-ness.
  - Server Side Rendering friendly (will not mount on server side due to nature of campaigns)
 
 ## Installation
@@ -45,14 +45,14 @@ class Header extends Component {
 
 ## Props
 
-### campaign 
- 
+### campaign
+
 Type: string  Default: undefined
 
 The name of the campaign you are testing, should correspond to the campaign in evergage but is really just a way to group experiences.
 
-### campaign 
- 
+### campaign
+
 Type: function Returns: Campaign with experienceId (number) and isControl (boolean)
 
 Callback that will be executed when an experience or the control is chosen.
@@ -63,7 +63,7 @@ Type: number Default: 100
 
 The amount of miliseconds to wait after dom content loaded to fallback to the control group if no event is received
 
-### placeholder
+### isVisible
 
 Type: boolean Default: false
 

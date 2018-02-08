@@ -10,7 +10,7 @@ export interface IEvergageABTestProps {
     campaign: string;
     eventPrefix: string;
     timeout: number;
-    placeholder: boolean;
+    isVisible: boolean;
     supressFallback: boolean;
     defaultExperience: number;
     onExperience: (ICampaign) => void;
@@ -91,16 +91,16 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         }
     }
     public render () {
-        const { supressFallback, placeholder, children, campaign} = this.props;
+        const { supressFallback, isVisible, children, campaign} = this.props;
         const { selectedExperience } = this.state;
         if(!canUseDOM) {
             return null;
         }
-        if (!supressFallback && placeholder && selectedExperience === undefined) {
-            const placeholderStyle = {
+        if (!supressFallback && isVisible && selectedExperience === undefined) {
+            const isVisibleStyle = {
                 visibility: "hidden",
             };
-            return <div style={placeholderStyle}>{children[0]}</div>;
+            return <div style={isVisibleStyle}>{children[0]}</div>;
         } else if (selectedExperience === undefined) {
             return null;
         }
