@@ -51,7 +51,7 @@ Type: string  Default: undefined
 
 The name of the campaign you are testing, should correspond to the campaign in evergage but is really just a way to group experiences.
 
-### campaign 
+### onExperience 
  
 Type: function Returns: Campaign with experienceId (number) and isControl (boolean)
 
