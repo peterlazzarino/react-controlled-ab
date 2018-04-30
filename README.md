@@ -42,6 +42,16 @@ class Header extends Component {
 }
 ```
 
+If you are creating a placeholder message in your campaign that should not be shown to the user, you can hide it using this in Message Source Code -> CSS
+
+```css
+
+.evergage-tooltip{
+    display:none !important;
+}
+
+```
+
 
 ## Props
 
