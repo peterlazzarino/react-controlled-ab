@@ -1,3 +1,3 @@
-import EvergageAB from "./components/EvergageABTest";
+import ABTest from "./components/ABTest";
 
-export default EvergageAB;
+export default ABTest;

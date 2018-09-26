@@ -1,7 +1,7 @@
 {
-  "name": "react-evergage-ab",
-  "version": "2.2.5",
-  "description": "React component for integrating Evergage test experiences with your react code.",
+  "name": "react-controlled-ab",
+  "version": "3.0.0",
+  "description": "React component for integrating test experiences with your react code from a source that decides what the variant should be.",
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
@@ -10,25 +10,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GoAheadTours/react-evergage-AB.git"
+    "url": "git+https://github.com/peterlazzarino/react-controlled-AB.git"
   },
   "keywords": [
     "evergage",
+    "VWO",
     "ab",
     "abtest",
     "react",
     "experience",
     "campaign"
   ],
-  "author": "Go Ahead Tours",
+  "author": "Peter Lazzarino",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/GoAheadTours/react-evergage-AB/issues"
+    "url": "https://github.com/peterlazzarino/react-controlled-AB/issues"
   },
-  "homepage": "https://github.com/GoAheadTours/react-evergage-AB#readme",
+  "homepage": "https://github.com/peterlazzarino/react-controlled-AB#readme",
   "dependencies": {
     "array-index-of": "^0.1.0",
-    "evergage-datalayer": "2.0.3",
     "prop-types": "15.6.0",
     "react": "16.0.0"
   },

@@ -1,29 +1,25 @@
 import * as React from "react";
-import * as PropTypes from "prop-types";
-import * as indexOf from "array-index-of";
 import { Campaign, ICampaign } from "../models/Campaign";
-import { subscribeToCampaign } from "evergage-datalayer";
 
 const canUseDOM = typeof window !== "undefined";
 
-export interface IEvergageABTestProps {
+export interface IABTestProps {
     campaign: string;
-    eventPrefix: string;
     timeout: number;
     placeholder: boolean;
+    subscribeFunc: (a: any, b: any) => void;
     supressFallback: boolean;
     defaultExperience: number;
     onExperience: (ICampaign) => void;
 }
 
-export interface IEvergageABTestState {
+export interface IABTestState {
     selectedExperience: number;
     campaignEventReceived: boolean;
 }
 
-export default class EvergageABTest extends React.Component<IEvergageABTestProps, IEvergageABTestState> {
-    public static defaultProps: Partial<IEvergageABTestProps> = {
-        eventPrefix: "EvergageAB",
+export default class ABTest extends React.Component<IABTestProps, IABTestState> {
+    public static defaultProps: Partial<IABTestProps> = {
         timeout: 100,
         defaultExperience: 0,
     };
@@ -42,8 +38,8 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         if(!canUseDOM) {
             return;
         }
-        const { campaign, eventPrefix, timeout } = this.props;
-        subscribeToCampaign(this.handleEvent, campaign);
+        const { campaign, timeout, subscribeFunc } = this.props;
+        subscribeFunc(this.handleEvent, campaign);
         if(document.readyState === "complete") {
             window.setTimeout(this.checkForExperience, timeout);
             return;
@@ -53,7 +49,6 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         });
     }
     public checkForExperience () {
-        const { children } = this.props;
         if(!this.state.campaignEventReceived && !this.props.supressFallback) {
             this.setState({
                 selectedExperience: 0,
@@ -62,12 +57,11 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
         }
     }
     public handleEvent (campaign) {
-        const currentExperienceIndex = parseInt(campaign.experienceName.match(/\d+/)[0], 10);
         this.setState({
-            selectedExperience: currentExperienceIndex,
+            selectedExperience: campaign.variantIndex,
             campaignEventReceived: true,
         });
-        this.callbackExperience(currentExperienceIndex);
+        this.callbackExperience(campaign.variantIndex);
     }
     public callbackExperience (experienceId) {
         const { campaign } = this.props;
@@ -84,7 +78,7 @@ export default class EvergageABTest extends React.Component<IEvergageABTestProps
             );
         } catch(err) {
             const errorMessage = `You do not have enough children to match the amount of experiences you have
-            configured in evergage... Campaign: ${campaign} Experience selected: ${selectedExperience}`;
+            configured.`;
             // tslint:disable-next-line:no-console
             console.warn(errorMessage);
             return null;
