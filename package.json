@@ -1,6 +1,6 @@
 {
   "name": "react-controlled-ab",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "React component for integrating test experiences with your react code from a source that decides what the variant should be.",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -45,6 +45,7 @@
     "react-styleguidist": "6.0.0-beta.1",
     "tslint": "5.5.0",
     "typescript": "2.3.4",
-    "webpack": "3.4.1"
+    "webpack": "4.28.3",
+    "webpack-dev-server": "3.1.14"
   }
 }

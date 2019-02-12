@@ -56,12 +56,12 @@ export default class ABTest extends React.Component<IABTestProps, IABTestState> 
             this.callbackExperience(0);
         }
     }
-    public handleEvent (campaign) {
+    public handleEvent (variantIndex) {
         this.setState({
-            selectedExperience: campaign.variantIndex,
+            selectedExperience: variantIndex,
             campaignEventReceived: true,
         });
-        this.callbackExperience(campaign.variantIndex);
+        this.callbackExperience(variantIndex);
     }
     public callbackExperience (experienceId) {
         const { campaign } = this.props;
@@ -73,6 +73,9 @@ export default class ABTest extends React.Component<IABTestProps, IABTestState> 
     public renderExperience (children, selectedExperience, campaign) {
         try {
             const experiencedReceived = children[selectedExperience];
+            if (!experiencedReceived) {
+                return null;
+            }
             return (
                 experiencedReceived
             );
@@ -90,7 +93,8 @@ export default class ABTest extends React.Component<IABTestProps, IABTestState> 
         if(!canUseDOM) {
             return null;
         }
-        if (!supressFallback && placeholder && selectedExperience === undefined) {
+        const noExperience = typeof selectedExperience === "undefined";
+        if (!supressFallback && placeholder && noExperience) {
             const placeholderStyle = {
                 visibility: "hidden",
             };

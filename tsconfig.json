@@ -8,6 +8,7 @@
     },
     "exclude": [
         "**/*.spec.*",
+        "example",
         "node_modules"
     ]
 }
