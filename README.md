@@ -1,4 +1,4 @@
-# react-controlled-AB
+# React Controlled AB
 
 React component for integrating test experiences with your react code from a source like VWO and evergage that decides what the variant should be.
 
