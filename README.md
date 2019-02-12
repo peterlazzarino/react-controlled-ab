@@ -17,19 +17,39 @@ React component for integrating test experiences with your react code from a sou
 
 $ npm install --save react-controlled-ab
 
+$ yarn add react-controlled-ab
+
 ```
 
 ## Usage
 
-to be written
+```javascript
+
+import React, { Component } from 'react';
+import ABTest, { DebugMenu } from "react-controlled-ab"
+import { subscribeToCampaign } from "react-controlled-ab/datalayers/vwo/Datalayer"
+
+<ABTest campaign={50} subscribeFunc={subscribeToCampaign}>
+    <span>Test 50 - Instance 1 - Control</span>
+    <span>Test 50 - Instance 1 - Variant B</span>
+    <span>Test 50 - Instance 1 - Variant C</span>
+</ABTest>
+
+```
 
 ## Props
 
 ### campaign 
  
-Type: string  Default: undefined
+Type: number  Default: undefined
 
-The name of the campaign you are testing, should correspond to the campaign in evergage but is really just a way to group experiences.
+The number of the campaign you are testing, should correspond to the campaign ID in VWO.
+
+### subscribeFunc 
+ 
+Type: function  Default: undefined
+
+The function imported from the datalayer you'd like to use. This prop allows ABTest to know when the campaign variant is identified and or changed.
 
 ### onExperience 
  
