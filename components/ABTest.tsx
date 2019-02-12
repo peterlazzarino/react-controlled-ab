@@ -90,7 +90,8 @@ export default class ABTest extends React.Component<IABTestProps, IABTestState> 
         if(!canUseDOM) {
             return null;
         }
-        if (!supressFallback && placeholder && selectedExperience === undefined) {
+        const noExperience = typeof selectedExperience === "undefined";
+        if (!supressFallback && placeholder && noExperience) {
             const placeholderStyle = {
                 visibility: "hidden",
             };
