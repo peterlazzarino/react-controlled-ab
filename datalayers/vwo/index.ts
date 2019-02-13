@@ -14,7 +14,6 @@ const findCampaignValue = (campaignId, callback, sendInitialValue) => {
     if(campaignValues[campaignId]){
         sendInitialValue(campaignId, campaignValues[campaignId], callback)
     }
-    let attempts = 0;
     let interval = setInterval(function(){                
         const campaignDefaultVal = getCookie(`_vis_opt_exp_${campaignId}_combi`);
         const campaignDebugVal = getCookie(`debug_vis_opt_exp_${campaignId}_combi`);
@@ -24,11 +23,8 @@ const findCampaignValue = (campaignId, callback, sendInitialValue) => {
             const vwoVariant = parseInt(campaignVal) - 1;
             campaignValues[campaignId] = vwoVariant;
             sendInitialValue(campaignId, vwoVariant, callback)
-        } else if (attempts > 10){
-            clearInterval(interval);
-            sendInitialValue(campaignId, 0, callback)
         }
-    }, 50);
+    }, 200);
 }
 
 const getCookie = (name) => {

@@ -9,6 +9,7 @@ export const setHandler = (id, callback) => {
     if(!campaignChangeHandlers[id]){
         campaignChangeHandlers[id] = [];
     }
+    notifyCampaignSubscribers(id, undefined);
     campaignChangeHandlers[id].push({
         id,
         callback

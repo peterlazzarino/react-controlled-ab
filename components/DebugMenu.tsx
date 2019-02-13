@@ -16,11 +16,10 @@ export default class DebugMenu extends React.Component<any, any> {
         for(const key of Object.keys(this.state.campaigns)){
             rows.push(
                 <div>
-                    Campaign ID: <b>{key}</b> -
-                    Variant :
+                    <b>{key}</b> -
                     <select
                         onChange={({ target: { value }}) => { updateCampaign(key, parseInt(value, 10));} }
-                        value={this.state.campaigns[key]}
+                        value={this.state.campaigns[key].value}
                     >
                         <option value={0}>Control</option>
                         <option value={1}>B</option>
@@ -28,6 +27,9 @@ export default class DebugMenu extends React.Component<any, any> {
                         <option value={4}>D</option>
                         <option value={5}>E</option>
                     </select>
+                    {!this.state.campaigns[key].isInDatalayer &&
+                        <p style={{ fontSize: "10px" }}><i>Not found in datalayer</i></p>
+                    }
                 </div>,
             );
         }
@@ -36,20 +38,30 @@ export default class DebugMenu extends React.Component<any, any> {
                 position: "fixed",
                 bottom: 0,
                 right: 15,
-                padding: "0 15px 15px",
-                width: "300px",
+                padding: "15px",
+                width: "200px",
                 backgroundColor: "#efefef",
             }}>
-                <h3 style={{ textAlign: "center" }}>Active A/B Tests</h3>
+                <span style={{
+                    display: "inline-block",
+                    marginBottom: "10px",
+                }}><b>Campaign ID</b> - Variant ID</span>
                 {rows}
             </div>
         );
     }
     private showCampaign = (id, value) => {
-        const newCampaignState = { ...this.state.campaigns };
-        newCampaignState[id] = value;
-        this.setState({
-            campaigns: newCampaignState,
-        });
+        const isInDatalayer = typeof value !== "undefined";
+        const campaignObj = {
+            id,
+            isInDatalayer,
+            value,
+        };
+        this.setState((prevState) => ({
+            campaigns: {
+                ...prevState.campaigns,
+                [id]: campaignObj,
+            },
+        }));
     }
 }
