@@ -7,29 +7,28 @@ const campaignValues = [];
 
 export const subscribeToCampaign = (callback, campaignId) => {
     setHandler(campaignId, callback)
-    sendInitialValue(campaignId, findCampaignValue(campaignId), callback)
+    findCampaignValue(campaignId, callback, sendInitialValue);
 }
 
-const findCampaignValue = (campaignId) => {
+const findCampaignValue = (campaignId, callback, sendInitialValue) => {
     if(campaignValues[campaignId]){
-        return campaignValues[campaignId];
+        sendInitialValue(campaignId, campaignValues[campaignId], callback)
     }
     let attempts = 0;
-    let campaignValue = 0;
     let interval = setInterval(function(){                
         const campaignDefaultVal = getCookie(`_vis_opt_exp_${campaignId}_combi`);
         const campaignDebugVal = getCookie(`debug_vis_opt_exp_${campaignId}_combi`);
         const campaignVal = campaignDefaultVal || campaignDebugVal;
         if(campaignVal){
             clearInterval(interval);
-            campaignValue = parseInt(campaignVal) - 1;
-            campaignValues[campaignId] = campaignVal;
-            return campaignValue;
+            const vwoVariant = parseInt(campaignVal) - 1;
+            campaignValues[campaignId] = vwoVariant;
+            sendInitialValue(campaignId, vwoVariant, callback)
         } else if (attempts > 10){
             clearInterval(interval);
+            sendInitialValue(campaignId, 0, callback)
         }
     }, 50);
-    return campaignValue;
 }
 
 const getCookie = (name) => {
